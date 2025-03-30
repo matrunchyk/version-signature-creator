@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- favicon.svg -->
+
+<svg
+   version="1.1"
+   width="16"
+   height="16"
+   viewBox="0 0 64 64"
+   id="svg2"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2" />
+  <!-- Left curly bracket -->
+  <!-- Right curly bracket -->
+  <!-- '#' to represent hashing/signature -->
+  <text
+     xml:space="preserve"
+     style="font-size:426.668px;line-height:1.2;font-family:'Savoye LET';-inkscape-font-specification:'Savoye LET, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;direction:ltr;text-anchor:middle;opacity:0.773333;fill:#000080;fill-opacity:1;stroke-width:20;stroke-linecap:round;stroke-linejoin:round"
+     x="32.426689"
+     y="49.946655"
+     id="text2"><tspan
+       id="tspan2"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:53.3333px;font-family:'3270Narrow Nerd Font Mono';-inkscape-font-specification:'3270Narrow Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000080;fill-opacity:1;stroke-width:20"
+       x="32.426685"
+       y="49.946655">{<tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:'3270Narrow Nerd Font Mono';-inkscape-font-specification:'3270Narrow Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
+   id="tspan3"> </tspan>}</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;line-height:1.2;font-family:'3270Narrow Nerd Font Mono';-inkscape-font-specification:'3270Narrow Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;direction:ltr;text-anchor:middle;opacity:0.773333;fill:#ff0000;fill-opacity:1;stroke-width:20;stroke-linecap:round;stroke-linejoin:round"
+     x="31.999989"
+     y="52.586655"
+     id="text4"><tspan
+       id="tspan4"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:53.3333px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ff0000;stroke-width:20"
+       x="31.999989"
+       y="52.586655">#</tspan></text>
+</svg>

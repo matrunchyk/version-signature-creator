@@ -1,12 +1,17 @@
 <template>
   <div class="bg-white">
-    <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
+    <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-20 lg:px-8">
       <div class="mx-auto max-w-2xl">
         <form>
           <div class="space-y-12">
             <div class="border-b border-gray-900/10 pb-12">
-              <h2 class="text-base/7 font-semibold text-gray-900">Version Signature Generator</h2>
-              <p class="mt-1 text-sm/6 text-gray-600">This app helps you to generate a version signature from service
+              <div class="flex items-center gap-x-4">
+                <img src="./assets/logo.png" alt="Version Signature Generator" class="h-12 w-auto"/>
+                <h2 class="text-base/7 font-semibold text-gray-900">
+                  Version Signature Generator
+                </h2>
+              </div>
+              <p class="text-sm/6 text-gray-600">This app helps you to generate a version signature from service
                 versions.</p>
               <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div class="col-span-full">
@@ -30,7 +35,7 @@
                   <div class="mt-2">
                     <input id="signature" name="signature" type="text" readonly
                            class="block w-full rounded-md bg-gray-100 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                           :value="calculateSignature(input)" />
+                           :value="calculateMD5(input)"/>
                   </div>
                 </div>
               </div>
@@ -55,7 +60,7 @@
       </div>
     </div>
     <div class="absolute bottom-4 text-center w-full text-sm text-gray-400">
-      Made with 💜 for best DevOps {{ isValid }}
+      Made with 💜 for best DevOps
     </div>
   </div>
 </template>
@@ -65,26 +70,22 @@ import md5 from 'md5';
 import { useFocus, useClipboard, useTextareaAutosize } from '@vueuse/core'
 import { computed, ref } from "vue";
 
-const { textarea, input } = useTextareaAutosize({ styleProp: 'minHeight' })
+const {textarea, input} = useTextareaAutosize({styleProp: 'minHeight'})
 const {copy, copied, isSupported} = useClipboard({source: input})
 const signature = ref('');
 const isValid = ref(false);
 
-useFocus(textarea, { initialValue: true })
+useFocus(textarea, {initialValue: true})
 
 type ServiceVersions = Record<string, string>;
 
 const textareaClasses = computed(() => {
   return [
     'block w-full rounded-md bg-gray-100 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 sm:text-sm/6',
-    { 'border-gray-300 focus:outline-indigo-600': isValid.value || !input.value },
-    { 'border-red-500 focus:outline-red-600': !isValid.value && input.value },
+    {'border-gray-300 focus:outline-indigo-600': isValid.value || !input.value},
+    {'border-red-500 focus:outline-red-600': !isValid.value && input.value},
   ]
 })
-
-function calculateSignature(inputString: string) {
-  signature.value = calculateMD5(inputString);
-}
 
 function parseJSON(string: string) {
   try {
