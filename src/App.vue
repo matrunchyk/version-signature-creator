@@ -43,7 +43,7 @@
           </div>
           <div class="mt-6 flex items-center justify-end gap-x-6" v-if="isSupported">
             <button @click="copy(signature)" type="button"
-                    class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    class="inline-flex cursor-pointer items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
               <span v-if="!copied">Copy to Clipboard</span>
               <template v-else>
                 <svg class="mr-1.5 -ml-0.5 size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
@@ -55,6 +55,7 @@
                 Copied!
               </template>
             </button>
+            <button type="button" class="mt-3 cursor-pointer inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50 sm:mt-0 sm:w-auto" @click="input = ''">Clear</button>
           </div>
         </form>
       </div>
