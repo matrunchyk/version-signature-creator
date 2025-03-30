@@ -15,11 +15,12 @@
                   </label>
                   <div class="mt-2">
                     <textarea
+                        ref="textarea"
                         id="json"
                         name="json"
-                        v-model="value"
+                        v-model="input"
                         rows="10"
-                        class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                        :class="textareaClasses"
                     ></textarea>
                   </div>
                 </div>
@@ -28,8 +29,8 @@
                   <label for="signature" class="block text-sm/6 font-medium text-gray-900">Signature hash</label>
                   <div class="mt-2">
                     <input id="signature" name="signature" type="text" readonly
-                           class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                           :value="signature">
+                           class="block w-full rounded-md bg-gray-100 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                           :value="calculateSignature(input)" />
                   </div>
                 </div>
               </div>
@@ -53,38 +54,92 @@
         </form>
       </div>
     </div>
+    <div class="absolute bottom-4 text-center w-full text-sm text-gray-400">
+      Made with 💜 for best DevOps {{ isValid }}
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
 import md5 from 'md5';
-import { useClipboard } from '@vueuse/core'
+import { useFocus, useClipboard, useTextareaAutosize } from '@vueuse/core'
+import { computed, ref } from "vue";
 
-const value = ref('');
-const signature = computed(() => calculateMD5(value.value));
-const {copy, copied, isSupported} = useClipboard({source: signature})
+const { textarea, input } = useTextareaAutosize({ styleProp: 'minHeight' })
+const {copy, copied, isSupported} = useClipboard({source: input})
+const signature = ref('');
+const isValid = ref(false);
 
-function calculateMD5(servicesVersion: string): string {
+useFocus(textarea, { initialValue: true })
+
+type ServiceVersions = Record<string, string>;
+
+const textareaClasses = computed(() => {
+  return [
+    'block w-full rounded-md bg-gray-100 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 sm:text-sm/6',
+    { 'border-gray-300 focus:outline-indigo-600': isValid.value || !input.value },
+    { 'border-red-500 focus:outline-red-600': !isValid.value && input.value },
+  ]
+})
+
+function calculateSignature(inputString: string) {
+  signature.value = calculateMD5(inputString);
+}
+
+function parseJSON(string: string) {
   try {
-    const versionString = Object.keys(JSON.parse(servicesVersion))
-        .sort((a, b) => {
-          if (a > b) return 1;
-          if (b > a) return -1;
+    const parsed = JSON.parse(string);
+    if (typeof parsed === 'object' && parsed !== null) {
+      isValid.value = true;
 
-          return 0;
-        })
-        .map(serviceKey => `${serviceKey}=${servicesVersion[serviceKey]}`)
-        .join(',');
-
-    return md5(versionString);
+      return parsed as ServiceVersions;
+    } else {
+      console.error('Parsed value is not an object');
+      isValid.value = false;
+      return null;
+    }
   } catch (error) {
-    console.error('Error calculating MD5:', error);
+    console.error('Error parsing JSON:', error);
+    isValid.value = false;
+    return null;
   }
 }
 
+function getServiceVersions(string: string): ServiceVersions | null {
+  if (string) {
+    // Remove all whitespace characters
+    string = string.replace(/\s+/g, '');
+
+    // Check if the string is a valid JSON object
+    if (string.startsWith('{') && string.endsWith('}')) {
+      return parseJSON(string);
+    }
+
+    isValid.value = false;
+  }
+
+  return null;
+}
+
+function calculateMD5(servicesVersion: string): string {
+  const serviceVersions = getServiceVersions(servicesVersion);
+
+  if (!serviceVersions) {
+    console.warn('Invalid JSON format');
+    return '';
+  }
+
+  const versionString = Object.keys(serviceVersions)
+      .sort((a, b) => {
+        if (a > b) return 1;
+        if (b > a) return -1;
+
+        return 0;
+      })
+      .map(serviceKey => `${serviceKey}=${serviceVersions[serviceKey]}`)
+      .join(',');
+
+  return md5(versionString);
+}
+
 </script>
-
-<style scoped>
-
-</style>
