@@ -62,21 +62,25 @@ import md5 from 'md5';
 import { useClipboard } from '@vueuse/core'
 
 const value = ref('');
-const signature = computed(() => calculateMD5(JSON.parse(value.value)));
+const signature = computed(() => calculateMD5(value.value));
 const {copy, copied, isSupported} = useClipboard({source: signature})
 
-function calculateMD5(servicesVersion: Record<string, string>): string {
-  const versionString = Object.keys(servicesVersion)
-      .sort((a, b) => {
-        if (a > b) return 1;
-        if (b > a) return -1;
+function calculateMD5(servicesVersion: string): string {
+  try {
+    const versionString = Object.keys(JSON.parse(servicesVersion))
+        .sort((a, b) => {
+          if (a > b) return 1;
+          if (b > a) return -1;
 
-        return 0;
-      })
-      .map(serviceKey => `${serviceKey}=${servicesVersion[serviceKey]}`)
-      .join(',');
+          return 0;
+        })
+        .map(serviceKey => `${serviceKey}=${servicesVersion[serviceKey]}`)
+        .join(',');
 
-  return md5(versionString);
+    return md5(versionString);
+  } catch (error) {
+    console.error('Error calculating MD5:', error);
+  }
 }
 
 </script>
