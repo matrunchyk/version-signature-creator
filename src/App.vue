@@ -1,0 +1,86 @@
+<template>
+  <div class="bg-white">
+    <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
+      <div class="mx-auto max-w-2xl">
+        <form>
+          <div class="space-y-12">
+            <div class="border-b border-gray-900/10 pb-12">
+              <h2 class="text-base/7 font-semibold text-gray-900">Version Signature Generator</h2>
+              <p class="mt-1 text-sm/6 text-gray-600">This app helps you to generate a version signature from service
+                versions.</p>
+              <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="col-span-full">
+                  <label for="json" class="block text-sm/6 font-medium text-gray-900">
+                    JSON
+                  </label>
+                  <div class="mt-2">
+                    <textarea
+                        id="json"
+                        name="json"
+                        v-model="value"
+                        rows="10"
+                        class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div class="sm:col-span-4">
+                  <label for="signature" class="block text-sm/6 font-medium text-gray-900">Signature hash</label>
+                  <div class="mt-2">
+                    <input id="signature" name="signature" type="text" readonly
+                           class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                           :value="signature">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6 flex items-center justify-end gap-x-6" v-if="isSupported">
+            <button @click="copy(signature)" type="button"
+                    class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+              <span v-if="!copied">Copy to Clipboard</span>
+              <template v-else>
+                <svg class="mr-1.5 -ml-0.5 size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
+                     data-slot="icon">
+                  <path fill-rule="evenodd"
+                        d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
+                        clip-rule="evenodd"></path>
+                </svg>
+                Copied!
+              </template>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed, ref } from "vue";
+import md5 from 'md5';
+import { useClipboard } from '@vueuse/core'
+
+const value = ref('');
+const signature = computed(() => calculateMD5(JSON.parse(value.value)));
+const {copy, copied, isSupported} = useClipboard({source: signature})
+
+function calculateMD5(servicesVersion: Record<string, string>): string {
+  const versionString = Object.keys(servicesVersion)
+      .sort((a, b) => {
+        if (a > b) return 1;
+        if (b > a) return -1;
+
+        return 0;
+      })
+      .map(serviceKey => `${serviceKey}=${servicesVersion[serviceKey]}`)
+      .join(',');
+
+  return md5(versionString);
+}
+
+</script>
+
+<style scoped>
+
+</style>
